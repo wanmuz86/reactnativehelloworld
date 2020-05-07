@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 // 1) Import useState
-import { StyleSheet, Text, View, Image, Button, TouchableHighlight, TextInput, Alert, Modal } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, TouchableHighlight, TextInput,FlatList, Alert, Modal, ScrollView, SafeAreaView } from 'react-native';
 export default function App() {
 
   const [name, setName] = useState('')
@@ -10,6 +10,26 @@ export default function App() {
 
   // - Modal - 1 Create state visible or non visible to Modal
   const [modalIsVisible, setModalIsVisible] = useState(false);
+
+  // - ListView - 1 Create data that's going to be shown in the ListView
+  const [users, setUsers] = useState([
+    {
+      'id':1,
+      'name':'Aiman'
+    },
+    {
+      'id':2,
+      'name':'Roshan'
+    },
+    {
+      'id':3,
+      'name':'Nabil'
+    },
+    {
+      'id':4,
+      'name':'Chan Wei Ping'
+    }
+  ])
 
   const showAlert = () => {
 Alert.alert("Welcome", "Welcome to my app", [
@@ -29,23 +49,30 @@ Alert.alert("Welcome", "Welcome to my app", [
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* Basic modal code start */}
       <Modal
       animationType="slide"
       visible={modalIsVisible}>
 
-        <View style={styles.container}>
-          <Text>Hello World</Text>
-          <TouchableHighlight >
-            <Text>Close Modal</Text>
+        <SafeAreaView style={styles.container}>
+          <FlatList
+          data={users}
+  renderItem={({item})=> <View><Text>{item.name}</Text></View>}
+  keyExtractor={item=>item.id}
+  />
+          <TouchableHighlight onPress={()=>setModalIsVisible(false)} style={styles.modalStyle}>
+            <Text style={{color:'white'}}>Close Modal</Text>
           </TouchableHighlight>
-        </View>
+        </SafeAreaView>
       </Modal>
       {/* Basic Modal code end */}
+      <ScrollView>
       <Text style={styles.header}>Hello World!</Text>
       <Text style={styles.subHeading}>Welcome to my app!</Text>
-      {/* <Image source={{uri: "https://reactnative.dev/docs/assets/p_cat1.png"}} style={{width: 150, height: 200}} /> */}
+       <Image source={{uri: "https://reactnative.dev/docs/assets/p_cat1.png"}} style={{width: 150, height: 200}} /> 
+      <Image source={require('./imgs/logo.png')} style={{ width: 300, height: 200 }} />
+      <Image source={require('./imgs/logo.png')} style={{ width: 300, height: 200 }} />
       <Image source={require('./imgs/logo.png')} style={{ width: 300, height: 200 }} />
       <TextInput placeholder="What is your name" 
       autoCorrect={false}
@@ -59,8 +86,11 @@ Alert.alert("Welcome", "Welcome to my app", [
       <TouchableHighlight onPress={showAlert}>
         <View style={styles.alertStyle}><Text style={{ color: 'white' }}>Show Alert</Text></View>
       </TouchableHighlight>
-
-    </View>
+      <TouchableHighlight onPress={()=>setModalIsVisible(true)}>
+        <View style={styles.modalStyle}><Text style={{ color: 'white' }}>Show Modal</Text></View>
+      </TouchableHighlight>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
@@ -85,6 +115,10 @@ const styles = StyleSheet.create({
   },
   alertStyle: {
     backgroundColor: 'indigo',
+    padding: 10
+  },
+  modalStyle: {
+    backgroundColor: 'blue',
     padding: 10
   }
 });
